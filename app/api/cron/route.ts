@@ -5,6 +5,10 @@ import { scrapeAmazonProduct } from "@/lib/scraper";
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
     try {
         connectToDB();
@@ -32,7 +36,8 @@ export async function GET() {
                 }
 
                 const updatedProduct = await Product.findOneAndUpdate(
-                    { url: scrapedProduct.url }, product, { upsert: true, new: true }
+                    { url: product.url },
+                    product
                 )
 
                 // 2 check each product's status "if" it's time to send an alert
